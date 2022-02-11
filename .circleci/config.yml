@@ -1,0 +1,25 @@
+version: 2.1
+
+jobs:
+  test:
+    parameters:
+      version:
+        type: string
+    docker:
+      - image: golang:<< parameters.version >>
+    steps:
+      - checkout
+      - run:
+          name: Print the Go version
+          command: go version
+      - run:
+          name: Run tests
+          command: go test -v -race -count=1 ./...
+
+workflows:
+  main:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              version: ["1.18beta1", "1.18beta2"]
